@@ -1,1 +1,240 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bandhu Foundation Member Portal</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background:#f0f2f5; padding: 10px; padding-bottom: 50px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        header { text-align: center; border-bottom: 2px solid #1a3c6d; padding-bottom: 10px; margin-bottom: 20px; }
+        header h1 { color: #1a3c6d; font-size: 1.3rem; margin: 0; }
+        .form-header-box { background: #1a3c6d; color: white; padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.7rem; margin-top: 5px; font-weight: bold; }
+        .section-label { background: #e7f3ff; color: #1a3c6d; padding: 5px 10px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; margin: 20px 0 10px 0; }
+        label { display: block; font-weight: 600; margin: 10px 0 4px; font-size: 0.85rem; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background: #fafafa; margin-bottom: 5px; }
+        .upload-section { background: #f8f9fa; border: 2px dashed #cbd5e0; border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 15px; }
+        .preview-img { width: 90px; height: 90px; object-fit: cover; border-radius: 10px; display: none; margin: 0 auto 10px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .sig-preview { width: 160px; height: 60px; object-fit: contain; }
+        .radio-card { background: #f9f9f9; padding: 10px; border-radius: 8px; border: 1px solid #eee; margin: 10px 0; }
+        .radio-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 0.9rem; }
+        .radio-group { display: flex; gap: 10px; font-weight: bold; }
+        .btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+        button { padding: 14px; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer; color: white; }
+        .btn-save { background: #198754; }
+        .btn-update { background: #0d6efd; display: none; }
+        .btn-cancel { background: #6c757d; display: none; }
+        .btn-refresh { background: #6f42c1; width: 100%; margin: 15px 0; font-size: 0.85rem; padding: 10px; }
+        .member-card { background: white; border: 1px solid #eee; border-radius: 10px; padding: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .member-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .member-info { flex: 1; min-width: 0; }
+        .member-name { font-weight: bold; font-size: 0.95rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .member-sub { font-size: 0.75rem; color: #666; }
+        .actions { display: flex; gap: 5px; }
+        .btn-sm { padding: 8px; border-radius: 6px; font-size: 0.7rem; color:white; border:none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>BANDHU FOUNDATION</h1>
+        <div class="form-header-box" id="formTitle">MEMBERSHIP APPLICATION</div>
+    </header>
+
+    <form id="userForm">
+        <input type="hidden" id="editId" name="editId">
+        
+        <div class="upload-section">
+            <img id="p-prev" class="preview-img">
+            <label>📸 Applicant Photograph *</label>
+            <input type="file" id="imgInput" name="profile_img" accept="image/*" onchange="preview(this, 'p-prev')">
+        </div>
+
+        <div class="section-label">PERSONAL DETAILS</div>
+        <label>1. Full Name *</label>
+        <input type="text" id="fn" name="full_name" required>
+
+        <label>2. Full Address *</label>
+        <textarea id="addr" name="address" rows="2" required></textarea>
+
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;"><label>3. State</label><input type="text" id="state" name="state" value="West Bengal"></div>
+            <div style="flex:1;"><label>4. Nationality</label><input type="text" id="nat" name="nationality" value="Indian"></div>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;"><label>5. Gender</label><select id="gen" name="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+            <div style="flex:1;"><label>6. Blood Group</label><input type="text" id="bg" name="blood_group" placeholder="O+"></div>
+        </div>
+
+        <label>7. Date of Birth</label>
+        <input type="date" id="dob" name="dob" required>
+
+        <div class="section-label">CONTACT INFO</div>
+        <label>9. Mobile Number *</label>
+        <input type="tel" id="mob" name="mobile" pattern="[0-9]{10}" required>
+
+        <div class="radio-card">
+            <div class="radio-row">
+                <span>Blood Donation?</span>
+                <div class="radio-group">
+                    <label><input type="radio" name="blood_don" value="Yes" checked> Yes</label>
+                    <label><input type="radio" name="blood_don" value="No"> No</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="upload-section">
+            <img id="s-prev" class="preview-img sig-preview">
+            <label>✍️ Digital Signature *</label>
+            <input type="file" id="sigInput" name="signature_img" accept="image/*" onchange="preview(this, 's-prev')">
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" id="saveBtn" class="btn-save">Submit Application</button>
+            <button type="button" id="updateBtn" class="btn-update">Update Member</button>
+            <button type="button" id="cancelBtn" class="btn-cancel">Cancel Edit</button>
+        </div>
+    </form>
+
+    <button class="btn-refresh" onclick="syncWithServer()">🔄 Get Latest Data from Server</button>
+    <div id="memberList"></div>
+</div>
+
+<script>
+const API = "https://api.bandhufoundation.in";
+
+function preview(input, id) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { $('#' + id).attr('src', e.target.result).show(); };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function renderList() {
+    const data = JSON.parse(localStorage.getItem('bandhu_members') || '[]');
+    let h = '';
+    data.forEach(u => {
+        const img = `${API}/api/img/${encodeURIComponent(u.user_id)}.webp?v=${u.time || 0}`;
+        h += `
+        <div class="member-card">
+            <img src="${img}" onerror="this.src='https://via.placeholder.com/55'">
+            <div class="member-info">
+                <span class="member-name">${u.json.full_name}</span>
+                <span class="member-sub">${u.json.mobile} | ${u.json.blood_group || ''}</span>
+            </div>
+            <div class="actions">
+                <button class="btn-sm" style="background:#fd7e14;" onclick='editMember(${JSON.stringify(u)})'>Edit</button>
+                <button class="btn-sm" style="background:#dc3545;" onclick="deleteMember(${u.id})">Del</button>
+            </div>
+        </div>`;
+    });
+    $('#memberList').html(h || '<p style="text-align:center; color:#999;">Cache empty. Click Refresh.</p>');
+}
+
+function syncWithServer() {
+    $('.btn-refresh').text('Syncing...').prop('disabled', true);
+    $.get(`${API}/api/list`, data => {
+        localStorage.setItem('bandhu_members', JSON.stringify(data));
+        renderList();
+    }).always(() => $('.btn-refresh').text('🔄 Get Latest Data from Server').prop('disabled', false));
+}
+
+function resetForm() {
+    $('#userForm')[0].reset();
+    $('#editId').val('');
+    $('#p-prev, #s-prev').hide().attr('src', '');
+    $('#formTitle').text('MEMBERSHIP APPLICATION');
+    $('#saveBtn').show(); $('#updateBtn, #cancelBtn').hide();
+}
+
+async function compress(file) {
+    return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const size = 350;
+                const scale = size / img.width;
+                canvas.width = size;
+                canvas.height = img.height * scale;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = "white"; ctx.fillRect(0,0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob(b => resolve(b), 'image/webp', 0.8);
+            };
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function editMember(u) {
+    const d = typeof u.json === 'string' ? JSON.parse(u.json) : u.json;
+    $('#editId').val(u.id);
+    $('#fn').val(d.full_name);
+    $('#mob').val(d.mobile);
+    $('#addr').val(d.address);
+    $('#state').val(d.state);
+    $('#nat').val(d.nationality);
+    $('#gen').val(d.gender);
+    $('#bg').val(d.blood_group);
+    $('#dob').val(d.dob);
+    $(`input[name="blood_don"][value="${d.blood_don}"]`).prop('checked', true);
+
+    $('#p-prev').attr('src', `${API}/api/img/${encodeURIComponent(u.user_id)}.webp?v=${u.time}`).show();
+    $('#s-prev').attr('src', `${API}/api/img/${encodeURIComponent(u.user_id)}_sig.webp?v=${u.time}`).show();
+
+    $('#formTitle').text('EDIT MEMBER');
+    $('#saveBtn').hide(); $('#updateBtn, #cancelBtn').show();
+    window.scrollTo({top:0, behavior:'smooth'});
+}
+
+async function handleSave(isUpdate) {
+    const fd = new FormData($('#userForm')[0]);
+    const $b = isUpdate ? $('#updateBtn') : $('#saveBtn');
+    const originalText = $b.text();
+    $b.prop('disabled', true).text('Saving...');
+
+    const meta = {};
+    fd.forEach((v, k) => { if(!(v instanceof File)) meta[k] = v; });
+    fd.append('json_payload', JSON.stringify(meta));
+
+    const p = $('#imgInput')[0].files[0];
+    if (p) fd.set('profile_img', await compress(p), 'p.webp');
+    const s = $('#sigInput')[0].files[0];
+    if (s) fd.set('signature_img', await compress(s), 's.webp');
+
+    $.ajax({
+        url: isUpdate ? `${API}/api/update` : `${API}/api/add`,
+        type: 'POST', data: fd, processData: false, contentType: false,
+        success: () => {
+            syncWithServer(); // Pull latest after save
+            resetForm();
+            alert('Success!');
+        },
+        complete: () => $b.prop('disabled', false).text(originalText)
+    });
+}
+
+function deleteMember(id) {
+    if(confirm('Delete permanently?')) {
+        $.ajax({url:`${API}/api/delete/${id}`, type:'DELETE', success: syncWithServer});
+    }
+}
+
+$('#userForm').on('submit', e => { e.preventDefault(); handleSave(false); });
+$('#updateBtn').on('click', () => handleSave(true));
+$('#cancelBtn').click(() => resetForm());
+
+$(document).ready(() => {
+    renderList(); // Load from LocalStorage first
+});
+</script>
+</body>
+</html>
